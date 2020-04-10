@@ -23,7 +23,7 @@ export const setLoading = () => {
 //check token & load user
 export const loadUser = () => (dispatch, getState) => {
   // set loading
-  dipatch(setLoading());
+  dispatch(setLoading());
 
   // Get token from localStorage
   const token = getState().auth.token;
