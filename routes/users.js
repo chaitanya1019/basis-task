@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
+const config = require('config');
 const User = require('../models/User');
 const OTP = require('../models/OTP');
 
@@ -13,7 +13,7 @@ router.post('/signup', async (req, res) => {
     let user = await User.findOne({ email });
 
     if (user) {
-      res.status(422).json({ msg: 'User already exists' });
+      res.status(400).json({ msg: 'User already exists' });
     }
 
     user = new User({
@@ -23,6 +23,28 @@ router.post('/signup', async (req, res) => {
     });
 
     await user.save();
+
+    //create a payload with created user id
+    const payload = {
+      user: {
+        id: user.id,
+      },
+    };
+
+    // encrypt payload with jwt
+    // set expiry time 60 mins
+    // send the encoded token back to client
+    jwt.sign(
+      payload,
+      config.get('jwtSecret'),
+      {
+        expiresIn: 360000,
+      },
+      (err, token) => {
+        if (err) throw err;
+        res.json({ token });
+      }
+    );
 
     res.send('Registration Success');
   } catch (error) {

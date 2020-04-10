@@ -84,7 +84,7 @@ const Authentication = ({
 
   useEffect(() => {
     console.log('use effect called', userType);
-    if (userType !== null || (otpVerified && userType === 'VERIFIED')) {
+    if (userType !== null || (otpVerified && userType === 'NOT_FOUND')) {
       setActiveStep(activeStep + 1);
     }
   }, [userType, otpVerified]);

@@ -50,6 +50,30 @@ export const loadUser = () => (dispatch, getState) => {
     });
 };
 
+// Register User
+export const register = ({ firstName, lastName, email }) => (dispatch) => {
+  // Headers
+  const config = {
+    headers: {
+      'Content-type': 'application/json',
+    },
+  };
+
+  // Request body
+  const body = JSON.stringify({ firstName, lastName, email });
+
+  axios
+    .post('api/users/signup', body, config)
+    .then((res) => dispatch({ type: REGISTER_SUCCESS, payload: res.data }))
+    .catch((err) => {
+      dispatch(
+        returnErrors(err.response.data, err.response.status, 'REGISTER_FAIL')
+      );
+
+      dispatch({ type: REGISTER_FAIL });
+    });
+};
+
 export const generateOTP = (email) => (dispatch) => {
   dispatch(setLoading());
 
