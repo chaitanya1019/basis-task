@@ -56,6 +56,8 @@ export default function (state = initialState, action) {
         ...action.payload,
         isAuthenticated: true,
         isLoading: false,
+        userType: null,
+        otpVerified: false,
       };
     case OTP_VERIFY_FAIL:
     case OTP_GENERATE_FAIL:

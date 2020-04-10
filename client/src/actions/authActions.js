@@ -103,7 +103,7 @@ export const generateOTP = (email) => (dispatch) => {
     });
 };
 
-export const verifyOTP = (email, otp) => (dispatch) => {
+export const verifyOTP = (email, otp) => (dispatch, getState) => {
   dispatch(setLoading());
 
   // Headers
@@ -118,7 +118,14 @@ export const verifyOTP = (email, otp) => (dispatch) => {
 
   axios
     .post('api/users/otp/verify', body, config)
-    .then((res) => dispatch({ type: OTP_VERIFY_SUCCESS }))
+    .then((res) => {
+      dispatch({ type: OTP_VERIFY_SUCCESS });
+      const userType = getState().auth.userType;
+
+      // if (userType === 'VERIFIED') {
+      //   loadUser();
+      // }
+    })
     .catch((err) => {
       dispatch(
         returnErrors(err.response.data, err.response.status, 'OTP_VERIFY_FAIL')
