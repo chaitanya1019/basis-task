@@ -2,6 +2,8 @@ import {
   USER_LOADED,
   OTP_GENERATE_FAIL,
   OTP_GENERATE_SUCCESS,
+  OTP_VERIFY_FAIL,
+  OTP_VERIFY_SUCCESS,
   AUTH_ERROR,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
@@ -17,6 +19,7 @@ const initialState = {
   isLoading: false,
   user: null,
   userType: null,
+  otpVerified: false,
 };
 
 export default function (state = initialState, action) {
@@ -31,6 +34,12 @@ export default function (state = initialState, action) {
         ...state,
         isLoading: false,
         userType: action.payload.email,
+      };
+    case OTP_VERIFY_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        otpVerified: true,
       };
     case USER_LOADED:
       return {
@@ -48,6 +57,7 @@ export default function (state = initialState, action) {
         isAuthenticated: true,
         isLoading: false,
       };
+    case OTP_VERIFY_FAIL:
     case OTP_GENERATE_FAIL:
     case AUTH_ERROR:
     case LOGIN_FAIL:

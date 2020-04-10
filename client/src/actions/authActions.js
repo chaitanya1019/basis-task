@@ -6,6 +6,8 @@ import {
   AUTH_ERROR,
   OTP_GENERATE_SUCCESS,
   OTP_GENERATE_FAIL,
+  OTP_VERIFY_FAIL,
+  OTP_VERIFY_SUCCESS,
   SET_LOADING,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
@@ -74,5 +76,30 @@ export const generateOTP = (email) => (dispatch) => {
       );
 
       dispatch({ type: OTP_GENERATE_FAIL });
+    });
+};
+
+export const verifyOTP = (email, otp) => (dispatch) => {
+  dispatch(setLoading());
+
+  // Headers
+  const config = {
+    headers: {
+      'Content-type': 'application/json',
+    },
+  };
+
+  // Request body
+  const body = JSON.stringify({ email, otp });
+
+  axios
+    .post('api/users/otp/verify', body, config)
+    .then((res) => dispatch({ type: OTP_VERIFY_SUCCESS }))
+    .catch((err) => {
+      dispatch(
+        returnErrors(err.response.data, err.response.status, 'OTP_VERIFY_FAIL')
+      );
+
+      dispatch({ type: OTP_VERIFY_FAIL });
     });
 };

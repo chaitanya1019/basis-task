@@ -13,7 +13,7 @@ import OTPForm from './OTPForm';
 import RegistrationForm from './RegistrationForm';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { generateOTP } from '../../actions/authActions';
+import { generateOTP, verifyOTP } from '../../actions/authActions';
 import { CircularProgress } from '@material-ui/core';
 
 function Copyright() {
@@ -68,8 +68,9 @@ const useStyles = makeStyles((theme) => ({
 const steps = ['Email', 'OTP', 'Registration'];
 
 const Authentication = ({
-  auth: { isAuthenticated, isLoading, userType },
+  auth: { isAuthenticated, isLoading, userType, otpVerified },
   generateOTP,
+  verifyOTP,
 }) => {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
@@ -82,10 +83,11 @@ const Authentication = ({
   });
 
   useEffect(() => {
-    if (userType !== null) {
+    console.log('use effect called', userType);
+    if (userType !== null || (otpVerified && userType === 'VERIFIED')) {
       setActiveStep(activeStep + 1);
     }
-  }, [userType]);
+  }, [userType, otpVerified]);
 
   const onChange = (event) => {
     setValues({ ...values, [event.target.name]: event.target.value });
@@ -113,10 +115,11 @@ const Authentication = ({
 
   const handleNext = (e) => {
     e.preventDefault();
-    const { email, firstName, lastName, referralCode } = values;
+    const { email, otp, firstName, lastName, referralCode } = values;
     if (activeStep === 0) {
       generateOTP(email);
-      console.log(userType);
+    } else if (activeStep === 1) {
+      verifyOTP(email, otp);
     }
   };
 
@@ -191,4 +194,6 @@ const mapStateToProps = (state) => ({
   error: state.error,
 });
 
-export default connect(mapStateToProps, { generateOTP })(Authentication);
+export default connect(mapStateToProps, { generateOTP, verifyOTP })(
+  Authentication
+);
