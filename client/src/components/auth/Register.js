@@ -238,6 +238,4 @@ SignInSide.propTypes = {
   error: PropTypes.object.isRequired,
 };
 
-
-
-export default (SignInSide);
+export default SignInSide;
