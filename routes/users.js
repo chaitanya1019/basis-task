@@ -1,8 +1,10 @@
 const express = require('express');
-const router = express.Router();
+const jwt = require('jsonwebtoken');
 const config = require('config');
 const User = require('../models/User');
 const OTP = require('../models/OTP');
+
+const router = express.Router();
 
 // @route       POST api/users/signup
 // desc         Register a user
@@ -45,8 +47,6 @@ router.post('/signup', async (req, res) => {
         res.json({ token });
       }
     );
-
-    res.send('Registration Success');
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server error!!');
@@ -114,6 +114,8 @@ router.post('/otp/generate', async (req, res) => {
 
     //check if an user exists with this email in users collection
     let user = await User.findOne({ email });
+
+    console.log(user);
 
     //If user exists with the email send Verified
     // else Not found attached to his email in response
