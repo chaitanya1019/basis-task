@@ -3,8 +3,10 @@ import { returnErrors } from './errorActions';
 
 import {
   USER_LOADED,
-  USER_LOADING,
   AUTH_ERROR,
+  OTP_GENERATE_SUCCESS,
+  OTP_GENERATE_FAIL,
+  SET_LOADING,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT_SUCCESS,
@@ -12,10 +14,16 @@ import {
   REGISTER_SUCCESS,
 } from './types.js';
 
+// Set loading to true
+export const setLoading = () => {
+  return {
+    type: SET_LOADING,
+  };
+};
 //check token & load user
 export const loadUser = () => (dispatch, getState) => {
-  // User loading
-  dispatch({ type: USER_LOADING });
+  // set loading
+  dipatch(setLoading());
 
   // Get token from localStorage
   const token = getState().auth.token;
@@ -37,5 +45,34 @@ export const loadUser = () => (dispatch, getState) => {
     .catch((err) => {
       dispatch(returnErrors(err.response.data, err.response.status));
       dispatch({ type: AUTH_ERROR });
+    });
+};
+
+export const generateOTP = (email) => (dispatch) => {
+  dispatch(setLoading());
+
+  // Headers
+  const config = {
+    headers: {
+      'Content-type': 'application/json',
+    },
+  };
+
+  // Request body
+  const body = JSON.stringify({ email });
+
+  axios
+    .post('api/users/otp/generate', body, config)
+    .then((res) => dispatch({ type: OTP_GENERATE_SUCCESS, payload: res.data }))
+    .catch((err) => {
+      dispatch(
+        returnErrors(
+          err.response.data,
+          err.response.status,
+          'OTP_GENERATE_FAIL'
+        )
+      );
+
+      dispatch({ type: OTP_GENERATE_FAIL });
     });
 };

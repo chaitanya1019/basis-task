@@ -88,9 +88,16 @@ router.post('/otp/generate', async (req, res) => {
       //save otp
       await newOTP.save();
     }
-    //Send success status
+
+    //check if an user exists with this email in users collection
+    let user = await User.findOne({ email });
+
+    //If user exists with the email send Verified
+    // else Not found attached to his email in response
+    // along with status success
     res.json({
       status: 'Success',
+      email: user ? 'VERIFIED' : 'NOT_FOUND',
     });
   } catch (error) {
     console.error(error.message);

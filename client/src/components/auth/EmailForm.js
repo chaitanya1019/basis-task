@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField';
 const EmailForm = ({ onChange, email }) => {
   return (
     <TextField
+      type="email"
       variant="outlined"
       margin="normal"
       required

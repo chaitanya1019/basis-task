@@ -1,12 +1,14 @@
 import {
   USER_LOADED,
-  USER_LOADING,
+  OTP_GENERATE_FAIL,
+  OTP_GENERATE_SUCCESS,
   AUTH_ERROR,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT_SUCCESS,
   REGISTER_FAIL,
   REGISTER_SUCCESS,
+  SET_LOADING,
 } from '../actions/types.js';
 
 const initialState = {
@@ -14,14 +16,21 @@ const initialState = {
   isAuthenticated: null,
   isLoading: false,
   user: null,
+  userType: null,
 };
 
 export default function (state = initialState, action) {
   switch (action.type) {
-    case USER_LOADING:
+    case SET_LOADING:
       return {
         ...state,
         isLoading: true,
+      };
+    case OTP_GENERATE_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        userType: action.payload.email,
       };
     case USER_LOADED:
       return {
@@ -39,6 +48,7 @@ export default function (state = initialState, action) {
         isAuthenticated: true,
         isLoading: false,
       };
+    case OTP_GENERATE_FAIL:
     case AUTH_ERROR:
     case LOGIN_FAIL:
     case LOGOUT_SUCCESS:

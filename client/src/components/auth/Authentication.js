@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
@@ -13,6 +13,8 @@ import OTPForm from './OTPForm';
 import RegistrationForm from './RegistrationForm';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { generateOTP } from '../../actions/authActions';
+import { CircularProgress } from '@material-ui/core';
 
 function Copyright() {
   return (
@@ -65,7 +67,10 @@ const useStyles = makeStyles((theme) => ({
 
 const steps = ['Email', 'OTP', 'Registration'];
 
-const Authentication = () => {
+const Authentication = ({
+  auth: { isAuthenticated, isLoading, userType },
+  generateOTP,
+}) => {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const [values, setValues] = React.useState({
@@ -75,6 +80,12 @@ const Authentication = () => {
     lastName: '',
     referralCode: '',
   });
+
+  useEffect(() => {
+    if (userType !== null) {
+      setActiveStep(activeStep + 1);
+    }
+  }, [userType]);
 
   const onChange = (event) => {
     setValues({ ...values, [event.target.name]: event.target.value });
@@ -100,8 +111,13 @@ const Authentication = () => {
     }
   }
 
-  const handleNext = () => {
-    setActiveStep(activeStep + 1);
+  const handleNext = (e) => {
+    e.preventDefault();
+    const { email, firstName, lastName, referralCode } = values;
+    if (activeStep === 0) {
+      generateOTP(email);
+      console.log(userType);
+    }
   };
 
   const handleBack = () => {
@@ -132,20 +148,27 @@ const Authentication = () => {
                 </Typography>
               </React.Fragment>
             ) : (
-              <React.Fragment>
+              <form onSubmit={handleNext}>
                 {getStepContent(activeStep)}
-                <div>
-                  <Button
-                    //   type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    onClick={handleNext}
-                    className={classes.button}>
-                    {activeStep === steps.length - 1 ? 'Register' : 'Next'}
-                  </Button>
-                </div>
-              </React.Fragment>
+
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  // onClick={handleNext}
+                  className={classes.button}>
+                  {isLoading ? (
+                    <CircularProgress />
+                  ) : activeStep === steps.length - 1 ? (
+                    'Register'
+                  ) : activeStep === 1 ? (
+                    'Verify'
+                  ) : (
+                    'Next'
+                  )}
+                </Button>
+              </form>
             )}
           </div>
           <Box mt={5}>
@@ -158,13 +181,14 @@ const Authentication = () => {
 };
 
 Authentication.propTypes = {
-  isAuthenticated: PropTypes.bool,
+  auth: PropTypes.object.isRequired,
   error: PropTypes.object.isRequired,
+  generateOTP: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth.isAuthenticated,
+  auth: state.auth,
   error: state.error,
 });
 
-export default connect(mapStateToProps, {})(Authentication);
+export default connect(mapStateToProps, { generateOTP })(Authentication);

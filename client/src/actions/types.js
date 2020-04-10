@@ -1,4 +1,3 @@
-export const USER_LOADING = 'USER_LOADING';
 export const USER_LOADED = 'USER_LOADED';
 export const AUTH_ERROR = 'AUTH_ERROR';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -8,3 +7,8 @@ export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 export const REGISTER_FAIL = 'REGISTER_FAIL';
 export const GET_ERRORS = 'GET_ERRORS';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
+export const OTP_GENERATE_SUCCESS = 'OTP_GENERATE_SUCCESS';
+export const OTP_GENERATE_FAIL = 'OTP_GENERATE_FAIL';
+export const OTP_VERIFY_SUCCESS = 'OTP_VERIFY_SUCCESS';
+export const OTP_VERIFY_FAIL = 'OTP_VERIFY_FAIL';
+export const SET_LOADING = 'SET_LOADING';
