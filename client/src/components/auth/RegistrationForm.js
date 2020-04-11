@@ -16,6 +16,7 @@ const RegistrationForm = ({ onChange, firstName, lastName, referralCode }) => {
           value={firstName}
           onChange={onChange}
           autoFocus
+          required
         />
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -29,14 +30,14 @@ const RegistrationForm = ({ onChange, firstName, lastName, referralCode }) => {
           value={lastName}
           onChange={onChange}
           autoComplete="lname"
+          required
         />
       </Grid>
       <Grid item xs={12}>
         <TextField
           variant="outlined"
-          required
           fullWidth
-          id="email"
+          id="referralCode"
           label="Referral Code"
           name="referralCode"
           value={referralCode}

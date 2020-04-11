@@ -12,7 +12,7 @@ const router = express.Router();
 // desc         Register a user
 // @access      Public
 router.post('/signup', async (req, res) => {
-  const { firstName, lastName, email } = req.body;
+  const { firstName, lastName, email, referredBy } = req.body;
   try {
     let user = await User.findOne({ email });
 
@@ -25,7 +25,7 @@ router.post('/signup', async (req, res) => {
       lastName,
       email,
       referralCode: shortid.generate(),
-      referredBy: '',
+      referredBy: referredBy,
     });
 
     await user.save();
@@ -153,16 +153,17 @@ router.post('/referral/verify', async (req, res) => {
   const { referralCode } = req.body;
   try {
     // get user by referral code
-    let user = await User.findOne({ referralCode });
+    const referredBy = await User.findOne({ referralCode });
 
     // if user is not found
     // return msg with error response code 400
-    if (!user) {
+    if (!referredBy) {
       return res.status(400).json({ message: 'Invalid Referral Code' });
     }
 
     res.status(200).json({
       message: 'correct',
+      email: referredBy.email,
     });
   } catch (error) {
     console.error(error.message);
