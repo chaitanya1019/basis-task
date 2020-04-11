@@ -25,6 +25,7 @@ import {
   closeSnackbar as closeSnackbarAction,
 } from '../../actions/snackbarActions';
 import { CircularProgress } from '@material-ui/core';
+import { useLocation } from 'react-router-dom';
 
 function Copyright() {
   return (
@@ -87,6 +88,8 @@ const Authentication = ({
   clearErrors,
   history,
 }) => {
+  //initialize useLocation hook
+  const location = useLocation();
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const [values, setValues] = React.useState({
@@ -125,8 +128,22 @@ const Authentication = ({
       (otpVerified && token === null)
     ) {
       setActiveStep(activeStep + 1);
+    } else if (activeStep === 2) {
+      // last flow of registration form
+      // read referral code from url if present
+
+      //extract search params
+      const searchParams = new URLSearchParams(location.search);
+      // extract referral code
+      const referralCode = searchParams.get('referralCode');
+
+      // valid referral code
+      // set referral code state
+      if (referralCode) {
+        setValues({ ...values, referralCode });
+      }
     }
-  }, [otpSent, otpVerified, isAuthenticated, history, error]);
+  }, [otpSent, otpVerified, isAuthenticated, history, error, activeStep]);
 
   const onChange = (event) => {
     setValues({ ...values, [event.target.name]: event.target.value });

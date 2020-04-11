@@ -53,7 +53,7 @@ const Header = ({ auth: { isAuthenticated, user }, logout }) => {
       component={RLink}
       variant="button"
       color="inherit"
-      to="/login"
+      to="/auth"
       underline="none"
       // className={classes.link}
     >

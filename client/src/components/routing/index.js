@@ -7,7 +7,7 @@ import Home from '../pages/Home';
 export default ({}) => {
   return (
     <Switch>
-      <Route exact path="/login" component={Authentication} />
+      <Route exact path="/auth" component={Authentication} />
       <PrivateRoute exact path="/" component={Home} />
     </Switch>
   );
