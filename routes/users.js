@@ -97,13 +97,9 @@ router.post('/otp/generate', async (req, res) => {
       await newOTP.save();
     }
 
-    //check if an user exists with this email in users collection
-    // let user = await User.findOne({ email });
-
     // send response with status success
     res.json({
-      status: 'Success',
-      // email: user ? 'VERIFIED' : 'NOT_FOUND',
+      msg: 'OTP SENT',
     });
   } catch (error) {
     console.error(error.message);
@@ -132,13 +128,13 @@ router.post('/otp/verify', async (req, res) => {
     //otp mismatch
     //return error with response code 400 and msg
     if (!isMatch) {
-      return res.status(400).json({ message: 'OTP is incorrect' });
+      return res.status(400).json({ msg: 'OTP is incorrect' });
     }
 
     //otp matched
     // return success response code with msg
     res.status(200).json({
-      message: 'correct',
+      msg: 'correct',
     });
   } catch (error) {
     console.error(error.message);
@@ -158,11 +154,11 @@ router.post('/referral/verify', async (req, res) => {
     // if user is not found
     // return msg with error response code 400
     if (!referredBy) {
-      return res.status(400).json({ message: 'Invalid Referral Code' });
+      return res.status(400).json({ msg: 'Invalid Referral Code' });
     }
 
     res.status(200).json({
-      message: 'correct',
+      msg: 'correct',
       email: referredBy.email,
     });
   } catch (error) {

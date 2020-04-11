@@ -134,7 +134,12 @@ const Authentication = ({
     } else if (activeStep === 1) {
       verifyOTP(email, otp);
     } else {
-      const newUser = { firstName, lastName, email, referredBy: user.email };
+      const newUser = {
+        firstName,
+        lastName,
+        email,
+        referredBy: (user && user.email) || '',
+      };
       register(newUser);
     }
   };

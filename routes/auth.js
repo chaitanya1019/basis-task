@@ -41,7 +41,7 @@ router.post('/otp', async (req, res) => {
     //otp mismatch
     //return error with response code 400 and msg
     if (!isMatch) {
-      return res.status(400).json({ message: 'OTP is incorrect' });
+      return res.status(400).json({ msg: 'Incorrect OTP' });
     }
 
     //check if an user exists with this email in users collection
@@ -64,7 +64,7 @@ router.post('/otp', async (req, res) => {
     //otp matched
     // return success response code with msg
     res.status(200).json({
-      message: 'correct',
+      msg: 'correct',
       token,
       user,
     });
