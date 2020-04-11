@@ -10,8 +10,14 @@ const router = express.Router();
 // @route       GET api/auth/user
 // desc         Get logged in user
 // @access      Private
-router.get('/user', auth, (req, res) => {
-  res.send('Get logged in user');
+router.get('/user', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    res.json(user);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
 });
 
 // @route       POST api/auth/otp
