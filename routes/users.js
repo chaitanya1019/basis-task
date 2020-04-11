@@ -146,4 +146,28 @@ router.post('/otp/verify', async (req, res) => {
   }
 });
 
+// @route       POST api/users/referral/verify
+// desc         Verify Referral Code
+// @access      Public
+router.post('/referral/verify', async (req, res) => {
+  const { referralCode } = req.body;
+  try {
+    // get user by referral code
+    let user = await User.findOne({ referralCode });
+
+    // if user is not found
+    // return msg with error response code 400
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid Referral Code' });
+    }
+
+    res.status(200).json({
+      message: 'correct',
+    });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server error!!');
+  }
+});
+
 module.exports = router;
