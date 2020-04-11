@@ -42,6 +42,12 @@ export default function (state = initialState, action) {
         isLoading: false,
         otpSent: true,
       };
+    case OTP_VERIFY_FAIL:
+      return {
+        ...state,
+        isLoading: false,
+        otpVerified: false,
+      };
     case OTP_VERIFY_SUCCESS:
       return {
         ...state,
@@ -66,7 +72,7 @@ export default function (state = initialState, action) {
         otpSent: false,
         otpVerified: false,
       };
-    case OTP_VERIFY_FAIL:
+    // case OTP_VERIFY_FAIL:
     case OTP_GENERATE_FAIL:
     case AUTH_ERROR:
     case LOGIN_FAIL:

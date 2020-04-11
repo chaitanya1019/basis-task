@@ -19,6 +19,7 @@ import {
   register,
   validate_referralCode,
 } from '../../actions/authActions';
+import { clearErrors } from '../../actions/errorActions.js';
 import {
   enqueueSnackbar as enqueueSnackbarAction,
   closeSnackbar as closeSnackbarAction,
@@ -78,10 +79,12 @@ const steps = ['Email', 'OTP', 'Registration'];
 
 const Authentication = ({
   auth: { isAuthenticated, isLoading, token, otpVerified, otpSent, user },
+  error,
   generateOTP,
   verifyOTP,
   register,
   validate_referralCode,
+  clearErrors,
   history,
 }) => {
   const classes = useStyles();
@@ -99,15 +102,31 @@ const Authentication = ({
   const closeSnackbar = (...args) => dispatch(closeSnackbarAction(...args));
 
   useEffect(() => {
-    if (isAuthenticated) {
+    // if there is an error display it
+    if (error.id) {
+      enqueueSnackbar({
+        message: error.msg || 'Server Error',
+        options: {
+          key: new Date().getTime() + Math.random(),
+          variant: 'warning',
+          action: (key) => (
+            <Button onClick={() => closeSnackbar(key)}>dismiss me</Button>
+          ),
+        },
+      });
+      //clear the errors after display
+      clearErrors();
+    } else if (isAuthenticated) {
+      // if user is authenticated
       history.push('/');
-    }
-    if (otpSent) {
+    } else if (
+      // change active step of auth flow based on otpSent, otpVerified, token and activeStep
+      (otpSent && activeStep === 0) ||
+      (otpVerified && token === null)
+    ) {
       setActiveStep(activeStep + 1);
-    } else if (otpVerified && !token) {
-      setActiveStep(activeStep + 1);
     }
-  }, [otpSent, otpVerified, isAuthenticated, history]);
+  }, [otpSent, otpVerified, isAuthenticated, history, error]);
 
   const onChange = (event) => {
     setValues({ ...values, [event.target.name]: event.target.value });
@@ -218,6 +237,7 @@ Authentication.propTypes = {
   verifyOTP: PropTypes.func.isRequired,
   register: PropTypes.func.isRequired,
   validate_referralCode: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -230,4 +250,5 @@ export default connect(mapStateToProps, {
   verifyOTP,
   register,
   validate_referralCode,
+  clearErrors,
 })(Authentication);
