@@ -4,6 +4,7 @@ import Header from './Header';
 import { connect } from 'react-redux';
 import { loadUser } from '../../actions/authActions';
 import PropTypes from 'prop-types';
+import Notifier from './Notifier';
 
 const Layout = ({ children, loadUser, auth: { token } }) => {
   useEffect(() => {
@@ -15,6 +16,7 @@ const Layout = ({ children, loadUser, auth: { token } }) => {
     <Fragment>
       <CssBaseline />
       <Header />
+      <Notifier />
       {children}
     </Fragment>
   );

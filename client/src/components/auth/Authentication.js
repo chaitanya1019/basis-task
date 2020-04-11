@@ -11,7 +11,7 @@ import Paper from '@material-ui/core/Paper';
 import EmailForm from './EmailForm';
 import OTPForm from './OTPForm';
 import RegistrationForm from './RegistrationForm';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   generateOTP,
@@ -19,6 +19,10 @@ import {
   register,
   validate_referralCode,
 } from '../../actions/authActions';
+import {
+  enqueueSnackbar as enqueueSnackbarAction,
+  closeSnackbar as closeSnackbarAction,
+} from '../../actions/snackbarActions';
 import { CircularProgress } from '@material-ui/core';
 
 function Copyright() {
@@ -89,6 +93,10 @@ const Authentication = ({
     lastName: '',
     referralCode: '',
   });
+
+  const dispatch = useDispatch();
+  const enqueueSnackbar = (...args) => dispatch(enqueueSnackbarAction(...args));
+  const closeSnackbar = (...args) => dispatch(closeSnackbarAction(...args));
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -180,7 +188,6 @@ const Authentication = ({
                   fullWidth
                   variant="contained"
                   color="primary"
-                  // onClick={handleNext}
                   className={classes.button}>
                   {isLoading ? (
                     <CircularProgress />

@@ -36,7 +36,7 @@ export const loadUser = () => async (dispatch) => {
       type: USER_LOADED,
       payload: res.data,
     });
-  } catch (error) {
+  } catch (err) {
     dispatch(
       returnErrors(err.response.data.msg, err.response.status, 'AUTH_ERROR')
     );
@@ -101,7 +101,7 @@ export const verifyOTP = (email, otp) => async (dispatch) => {
     } else {
       dispatch({ type: OTP_VERIFY_SUCCESS });
     }
-  } catch (error) {
+  } catch (err) {
     dispatch(
       returnErrors(
         err.response.data.msg,

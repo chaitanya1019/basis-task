@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import Routes from './components/routing/index';
-
+import { SnackbarProvider } from 'notistack';
 import { Provider } from 'react-redux';
 import store from './store.js';
 import Layout from './components/layout/Layout';
@@ -17,9 +17,11 @@ if (token) {
 function App() {
   return (
     <Provider store={store}>
-      <Layout>
-        <Routes />
-      </Layout>
+      <SnackbarProvider>
+        <Layout>
+          <Routes />
+        </Layout>
+      </SnackbarProvider>
     </Provider>
   );
 }
