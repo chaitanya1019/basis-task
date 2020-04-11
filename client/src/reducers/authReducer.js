@@ -4,6 +4,8 @@ import {
   OTP_GENERATE_SUCCESS,
   OTP_VERIFY_FAIL,
   OTP_VERIFY_SUCCESS,
+  REFERRAL_VALIDATION_FAIL,
+  REFERRAL_VALIDATION_SUCCESS,
   AUTH_ERROR,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
@@ -29,12 +31,16 @@ export default function (state = initialState, action) {
         ...state,
         isLoading: true,
       };
+    case REFERRAL_VALIDATION_SUCCESS:
+      return {
+        ...state,
+        user: action.payload,
+      };
     case OTP_GENERATE_SUCCESS:
       return {
         ...state,
         isLoading: false,
         otpSent: true,
-        // userType: action.payload.email,
       };
     case OTP_VERIFY_SUCCESS:
       return {
@@ -66,6 +72,7 @@ export default function (state = initialState, action) {
     case LOGIN_FAIL:
     case LOGOUT_SUCCESS:
     case REGISTER_FAIL:
+    case REFERRAL_VALIDATION_FAIL:
       localStorage.removeItem('basis-token');
       return {
         ...state,

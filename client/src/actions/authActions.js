@@ -10,6 +10,8 @@ import {
   OTP_VERIFY_SUCCESS,
   SET_LOADING,
   LOGIN_SUCCESS,
+  REFERRAL_VALIDATION_FAIL,
+  REFERRAL_VALIDATION_SUCCESS,
   LOGIN_FAIL,
   LOGOUT_SUCCESS,
   REGISTER_FAIL,
@@ -37,7 +39,9 @@ export const loadUser = () => (dispatch, getState) => {
 };
 
 // Register User
-export const register = ({ firstName, lastName, email }) => (dispatch) => {
+export const register = ({ firstName, lastName, email, referredBy }) => (
+  dispatch
+) => {
   // Headers
   const config = {
     headers: {
@@ -46,7 +50,7 @@ export const register = ({ firstName, lastName, email }) => (dispatch) => {
   };
 
   // Request body
-  const body = JSON.stringify({ firstName, lastName, email });
+  const body = JSON.stringify({ firstName, lastName, email, referredBy });
 
   axios
     .post('api/users/signup', body, config)
@@ -89,7 +93,7 @@ export const generateOTP = (email) => (dispatch) => {
     });
 };
 
-export const verifyOTP = (email, otp) => (dispatch, getState) => {
+export const verifyOTP = (email, otp) => (dispatch) => {
   dispatch(setLoading());
 
   // Headers
@@ -117,6 +121,40 @@ export const verifyOTP = (email, otp) => (dispatch, getState) => {
       );
 
       dispatch({ type: OTP_VERIFY_FAIL });
+    });
+};
+
+export const validate_referralCode = (referralCode) => (dispatch) => {
+  // Headers
+  const config = {
+    headers: {
+      'Content-type': 'application/json',
+    },
+  };
+
+  // Request body
+  const body = JSON.stringify({ referralCode });
+
+  axios
+    .post('api/users/referral/verify', body, config)
+    .then((res) => {
+      dispatch({
+        type: REFERRAL_VALIDATION_SUCCESS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(
+        returnErrors(
+          err.response.data,
+          err.response.status,
+          'REFERRAL_VALIDATION_FAIL'
+        )
+      );
+
+      dispatch({
+        type: REFERRAL_VALIDATION_FAIL,
+      });
     });
 };
 

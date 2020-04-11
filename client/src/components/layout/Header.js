@@ -1,14 +1,19 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import {
+  AppBar,
+  Link,
+  Toolbar,
+  Typography,
+  Button,
+  Menu,
+  MenuItem,
+} from '@material-ui/core';
+
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logout } from '../../actions/authActions';
+import { Link as RLink } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,10 +25,41 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
+  sectionDesktop: {
+    display: 'none',
+    [theme.breakpoints.up('md')]: {
+      display: 'flex',
+      marginRight: 46,
+    },
+  },
 }));
 
-const Header = ({ auth: { isAuthenticated }, logout }) => {
+const Header = ({ auth: { isAuthenticated, user }, logout }) => {
   const classes = useStyles();
+
+  const authLinks = (
+    <Fragment>
+      <Typography variant="button" className={classes.sectionDesktop}>
+        Hello {user && user.firstName}
+      </Typography>
+      <Button color="inherit" onClick={logout} aria-label="logout">
+        Logout
+      </Button>
+    </Fragment>
+  );
+
+  const guestLinks = (
+    <Link
+      component={RLink}
+      variant="button"
+      color="inherit"
+      to="/login"
+      underline="none"
+      // className={classes.link}
+    >
+      Register/Login
+    </Link>
+  );
 
   return (
     <div className={classes.root}>
@@ -32,11 +68,7 @@ const Header = ({ auth: { isAuthenticated }, logout }) => {
           <Typography variant="h6" className={classes.title}>
             Basis
           </Typography>
-          {isAuthenticated && (
-            <Button color="inherit" onClick={logout}>
-              Logout
-            </Button>
-          )}
+          {isAuthenticated ? authLinks : guestLinks}
         </Toolbar>
       </AppBar>
     </div>

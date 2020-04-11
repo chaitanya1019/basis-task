@@ -5,9 +5,11 @@ import { connect } from 'react-redux';
 import { loadUser } from '../../actions/authActions';
 import PropTypes from 'prop-types';
 
-const Layout = ({ children, loadUser }) => {
+const Layout = ({ children, loadUser, auth: { token } }) => {
   useEffect(() => {
-    loadUser();
+    if (token) {
+      loadUser();
+    }
   }, []);
   return (
     <Fragment>
@@ -19,7 +21,12 @@ const Layout = ({ children, loadUser }) => {
 };
 
 Layout.propTypes = {
+  auth: PropTypes.object.isRequired,
   loadUser: PropTypes.func.isRequired,
 };
 
-export default connect(null, { loadUser })(Layout);
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps, { loadUser })(Layout);

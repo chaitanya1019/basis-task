@@ -13,7 +13,12 @@ import OTPForm from './OTPForm';
 import RegistrationForm from './RegistrationForm';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { generateOTP, verifyOTP, register } from '../../actions/authActions';
+import {
+  generateOTP,
+  verifyOTP,
+  register,
+  validate_referralCode,
+} from '../../actions/authActions';
 import { CircularProgress } from '@material-ui/core';
 
 function Copyright() {
@@ -68,10 +73,11 @@ const useStyles = makeStyles((theme) => ({
 const steps = ['Email', 'OTP', 'Registration'];
 
 const Authentication = ({
-  auth: { isAuthenticated, isLoading, token, otpVerified, otpSent },
+  auth: { isAuthenticated, isLoading, token, otpVerified, otpSent, user },
   generateOTP,
   verifyOTP,
   register,
+  validate_referralCode,
   history,
 }) => {
   const classes = useStyles();
@@ -112,6 +118,7 @@ const Authentication = ({
             firstName={values.firstName}
             lastName={values.lastName}
             referralCode={values.referralCode}
+            validate_referralCode={validate_referralCode}
           />
         );
       default:
@@ -127,7 +134,7 @@ const Authentication = ({
     } else if (activeStep === 1) {
       verifyOTP(email, otp);
     } else {
-      const newUser = { firstName, lastName, email };
+      const newUser = { firstName, lastName, email, referredBy: user.email };
       register(newUser);
     }
   };
@@ -198,6 +205,7 @@ Authentication.propTypes = {
   generateOTP: PropTypes.func.isRequired,
   verifyOTP: PropTypes.func.isRequired,
   register: PropTypes.func.isRequired,
+  validate_referralCode: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -205,6 +213,9 @@ const mapStateToProps = (state) => ({
   error: state.error,
 });
 
-export default connect(mapStateToProps, { generateOTP, verifyOTP, register })(
-  Authentication
-);
+export default connect(mapStateToProps, {
+  generateOTP,
+  verifyOTP,
+  register,
+  validate_referralCode,
+})(Authentication);
