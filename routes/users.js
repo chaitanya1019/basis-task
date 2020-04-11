@@ -1,6 +1,8 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const config = require('config');
+const shortid = require('shortid');
+
 const User = require('../models/User');
 const OTP = require('../models/OTP');
 
@@ -22,6 +24,8 @@ router.post('/signup', async (req, res) => {
       firstName,
       lastName,
       email,
+      referralCode: shortid.generate(),
+      referredBy: '',
     });
 
     await user.save();
@@ -51,6 +55,8 @@ router.post('/signup', async (req, res) => {
             email: user.email,
             firstName: user.firstName,
             lastName: user.lastName,
+            referralCode: user.referralCode,
+            referredBy: user.referredBy,
           },
         });
       }

@@ -14,6 +14,15 @@ const UserSchema = mongoose.Schema({
     required: true,
     unique: true,
   },
+  referralCode: {
+    type: String,
+    required: false,
+    unique: true,
+  },
+  referredBy: {
+    type: String,
+    required: false,
+  },
   date: {
     type: Date,
     default: Date.now,
