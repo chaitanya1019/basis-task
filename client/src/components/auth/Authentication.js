@@ -125,7 +125,7 @@ const Authentication = ({
     } else if (
       // change active step of auth flow based on otpSent, otpVerified, token and activeStep
       (otpSent && activeStep === 0) ||
-      (otpVerified && token === null)
+      (otpVerified && token === null && activeStep === 2)
     ) {
       setActiveStep(activeStep + 1);
     } else if (activeStep === 2) {
