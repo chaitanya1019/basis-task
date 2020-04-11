@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { returnErrors } from './errorActions';
-
+import setAuthToken from '../utils/setAuthToken';
 import {
   USER_LOADED,
   AUTH_ERROR,
@@ -27,22 +27,8 @@ export const loadUser = () => (dispatch, getState) => {
   // set loading
   dispatch(setLoading());
 
-  // Get token from localStorage
-  const token = getState().auth.token;
-
-  // Headers
-  const config = {
-    headers: {
-      'Content-type': 'application/json',
-    },
-  };
-
-  if (token) {
-    config.headers['x-auth-token'] = token;
-  }
-
   axios
-    .get('api/auth/user', config)
+    .get('api/auth/user')
     .then((res) => dispatch({ type: USER_LOADED, payload: res.data }))
     .catch((err) => {
       dispatch(returnErrors(err.response.data, err.response.status));
@@ -117,14 +103,13 @@ export const verifyOTP = (email, otp) => (dispatch, getState) => {
   const body = JSON.stringify({ email, otp });
 
   axios
-    .post('api/users/otp/verify', body, config)
+    .post('api/auth/otp', body, config)
     .then((res) => {
-      dispatch({ type: OTP_VERIFY_SUCCESS });
-      const userType = getState().auth.userType;
-
-      // if (userType === 'VERIFIED') {
-      //   loadUser();
-      // }
+      if (res.data.token) {
+        dispatch({ type: LOGIN_SUCCESS, payload: res.data });
+      } else {
+        dispatch({ type: OTP_VERIFY_SUCCESS });
+      }
     })
     .catch((err) => {
       dispatch(
@@ -133,4 +118,10 @@ export const verifyOTP = (email, otp) => (dispatch, getState) => {
 
       dispatch({ type: OTP_VERIFY_FAIL });
     });
+};
+
+export const logout = () => {
+  return {
+    type: LOGOUT_SUCCESS,
+  };
 };

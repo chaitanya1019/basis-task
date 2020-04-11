@@ -68,10 +68,11 @@ const useStyles = makeStyles((theme) => ({
 const steps = ['Email', 'OTP', 'Registration'];
 
 const Authentication = ({
-  auth: { isAuthenticated, isLoading, userType, otpVerified },
+  auth: { isAuthenticated, isLoading, token, otpVerified, otpSent },
   generateOTP,
   verifyOTP,
   register,
+  history,
 }) => {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
@@ -84,13 +85,15 @@ const Authentication = ({
   });
 
   useEffect(() => {
-    console.log('use effect called', userType);
-    if (userType !== null && !otpVerified) {
+    if (isAuthenticated) {
+      history.push('/');
+    }
+    if (otpSent) {
       setActiveStep(activeStep + 1);
-    } else if (otpVerified && userType === 'NOT_FOUND') {
+    } else if (otpVerified && !token) {
       setActiveStep(activeStep + 1);
     }
-  }, [userType, otpVerified]);
+  }, [otpSent, otpVerified, isAuthenticated, history]);
 
   const onChange = (event) => {
     setValues({ ...values, [event.target.name]: event.target.value });
@@ -193,6 +196,8 @@ Authentication.propTypes = {
   auth: PropTypes.object.isRequired,
   error: PropTypes.object.isRequired,
   generateOTP: PropTypes.func.isRequired,
+  verifyOTP: PropTypes.func.isRequired,
+  register: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({

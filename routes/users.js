@@ -61,35 +61,6 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-// @route       POST api/users/signup/status
-// desc         Get User status
-// @access      Public
-router.post('/signup/status', async (req, res) => {
-  const { email } = req.body;
-  try {
-    let user = await User.findOne({ email });
-
-    if (user) {
-      res.json({
-        message: 'Account Details',
-        userDetails: {
-          eamil: 'VERIFIED',
-        },
-      });
-    } else {
-      res.json({
-        message: 'Account Details',
-        userDetails: {
-          eamil: 'NOT_FOUND',
-        },
-      });
-    }
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).send('Server error!!');
-  }
-});
-
 // @route       POST api/users/otp/generate
 // desc         Generate OTP
 // @access      Public
@@ -121,16 +92,12 @@ router.post('/otp/generate', async (req, res) => {
     }
 
     //check if an user exists with this email in users collection
-    let user = await User.findOne({ email });
+    // let user = await User.findOne({ email });
 
-    console.log(user);
-
-    //If user exists with the email send Verified
-    // else Not found attached to his email in response
-    // along with status success
+    // send response with status success
     res.json({
       status: 'Success',
-      email: user ? 'VERIFIED' : 'NOT_FOUND',
+      // email: user ? 'VERIFIED' : 'NOT_FOUND',
     });
   } catch (error) {
     console.error(error.message);
@@ -165,7 +132,7 @@ router.post('/otp/verify', async (req, res) => {
     //otp matched
     // return success response code with msg
     res.status(200).json({
-      message: 'verified',
+      message: 'correct',
     });
   } catch (error) {
     console.error(error.message);

@@ -15,11 +15,11 @@ import {
 
 const initialState = {
   token: localStorage.getItem('basis-token'),
-  isAuthenticated: null,
+  isAuthenticated: false,
   isLoading: false,
   user: null,
-  userType: null,
   otpVerified: false,
+  otpSent: false,
 };
 
 export default function (state = initialState, action) {
@@ -33,7 +33,8 @@ export default function (state = initialState, action) {
       return {
         ...state,
         isLoading: false,
-        userType: action.payload.email,
+        otpSent: true,
+        // userType: action.payload.email,
       };
     case OTP_VERIFY_SUCCESS:
       return {
@@ -56,7 +57,7 @@ export default function (state = initialState, action) {
         ...action.payload,
         isAuthenticated: true,
         isLoading: false,
-        userType: null,
+        otpSent: false,
         otpVerified: false,
       };
     case OTP_VERIFY_FAIL:
@@ -72,6 +73,8 @@ export default function (state = initialState, action) {
         user: null,
         isAuthenticated: false,
         isLoading: false,
+        otpSent: false,
+        otpVerified: false,
       };
     default:
       return state;

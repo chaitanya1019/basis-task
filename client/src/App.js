@@ -1,19 +1,27 @@
 import React from 'react';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Header from './components/layout/Header';
-import Authentication from './components/auth/Authentication';
+import { withRouter } from 'react-router-dom';
+import Routes from './components/routing/index';
 
 import { Provider } from 'react-redux';
 import store from './store.js';
+import Layout from './components/layout/Layout';
+import setAuthToken from './utils/setAuthToken';
+
+//Get token from local storage
+const token = localStorage.getItem('basis-token');
+
+if (token) {
+  setAuthToken(token);
+}
 
 function App() {
   return (
     <Provider store={store}>
-      <CssBaseline />
-      <Header />
-      <Authentication />
+      <Layout>
+        <Routes />
+      </Layout>
     </Provider>
   );
 }
 
-export default App;
+export default withRouter(App);
