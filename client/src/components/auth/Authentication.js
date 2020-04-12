@@ -93,7 +93,7 @@ const Authentication = ({
   //initialize useLocation hook
   const location = useLocation();
   const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(2);
+  const [activeStep, setActiveStep] = React.useState(0);
   const [values, setValues] = React.useState({
     email: '',
     otp: '',
