@@ -13,7 +13,7 @@ const EmailForm = ({ onChange, email }) => {
       label="Email Address"
       name="email"
       value={email}
-      onChange={onChange}
+      onChange={onChange()}
       autoComplete="email"
       autoFocus
     />

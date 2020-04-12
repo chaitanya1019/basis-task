@@ -10,6 +10,7 @@ import {
   OTP_VERIFY_SUCCESS,
   SET_LOADING,
   LOGIN_SUCCESS,
+  REFERRAL_CODE_CLEAR,
   REFERRAL_VALIDATION_FAIL,
   REFERRAL_VALIDATION_SUCCESS,
   LOGIN_FAIL,
@@ -135,6 +136,12 @@ export const validate_referralCode = (referralCode) => async (dispatch) => {
       type: REFERRAL_VALIDATION_FAIL,
     });
   }
+};
+
+export const clear_referralCode = () => {
+  return {
+    type: REFERRAL_CODE_CLEAR,
+  };
 };
 
 export const logout = () => {

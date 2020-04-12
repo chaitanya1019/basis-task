@@ -4,6 +4,7 @@ import {
   OTP_GENERATE_SUCCESS,
   OTP_VERIFY_FAIL,
   OTP_VERIFY_SUCCESS,
+  REFERRAL_CODE_CLEAR,
   REFERRAL_VALIDATION_FAIL,
   REFERRAL_VALIDATION_SUCCESS,
   AUTH_ERROR,
@@ -79,6 +80,7 @@ export default function (state = initialState, action) {
     case LOGOUT_SUCCESS:
     case REGISTER_FAIL:
     case REFERRAL_VALIDATION_FAIL:
+    case REFERRAL_CODE_CLEAR:
       localStorage.removeItem('basis-token');
       return {
         ...state,

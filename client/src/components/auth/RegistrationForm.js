@@ -5,17 +5,29 @@ import {
   InputLabel,
   OutlinedInput,
   InputAdornment,
+  IconButton,
   Grid,
   TextField,
 } from '@material-ui/core';
+import ClearIcon from '@material-ui/icons/Clear';
 
 const RegistrationForm = ({
   onChange,
   firstName,
   lastName,
   referralCode,
+  referralEmail,
   validate_referralCode,
+  clear_referralCode,
 }) => {
+  const referralDataCheck = () => {
+    return referralEmail && referralCode.trim();
+  };
+
+  const handleClearBtnClick = () => {
+    onChange('ref', 'red');
+    clear_referralCode();
+  };
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} sm={6}>
@@ -28,7 +40,7 @@ const RegistrationForm = ({
           id="firstName"
           label="First Name"
           value={firstName}
-          onChange={onChange}
+          onChange={onChange()}
           autoFocus
         />
       </Grid>
@@ -41,7 +53,7 @@ const RegistrationForm = ({
           label="Last Name"
           name="lastName"
           value={lastName}
-          onChange={onChange}
+          onChange={onChange()}
           autoComplete="lastName"
         />
       </Grid>
@@ -52,15 +64,23 @@ const RegistrationForm = ({
             id="referralCode"
             name="referralCode"
             value={referralCode}
-            onChange={onChange}
+            onChange={onChange()}
             type="text"
             endAdornment={
               <InputAdornment position="end">
+                {referralDataCheck() && (
+                  <IconButton
+                    aria-label="clear referral code"
+                    onClick={onChange('referralCode', '')}>
+                    <ClearIcon />
+                  </IconButton>
+                )}
+
                 <Button
                   color="secondary"
                   onClick={() => validate_referralCode(referralCode)}
-                  disabled={!referralCode.trim()}>
-                  Apply
+                  disabled={!referralCode.trim() || referralEmail}>
+                  {referralDataCheck() ? 'Applied' : 'Apply'}
                 </Button>
               </InputAdornment>
             }

@@ -23,7 +23,7 @@ const OTPForm = ({ onChange, otp, email, otpSent }) => {
         label="OTP"
         name="otp"
         value={otp}
-        onChange={onChange}
+        onChange={onChange()}
         autoComplete="otp"
         autoFocus
       />

@@ -17,8 +17,8 @@ import {
   generateOTP,
   verifyOTP,
   register,
-  resetOTPState,
   validate_referralCode,
+  clear_referralCode,
 } from '../../actions/authActions';
 import { clearErrors } from '../../actions/errorActions.js';
 import {
@@ -84,16 +84,16 @@ const Authentication = ({
   error,
   generateOTP,
   verifyOTP,
-  resetOTPState,
   register,
   validate_referralCode,
+  clear_referralCode,
   clearErrors,
   history,
 }) => {
   //initialize useLocation hook
   const location = useLocation();
   const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = React.useState(2);
   const [values, setValues] = React.useState({
     email: '',
     otp: '',
@@ -147,8 +147,15 @@ const Authentication = ({
     }
   }, [otpSent, otpVerified, isAuthenticated, history, error, activeStep]);
 
-  const onChange = (event) => {
-    setValues({ ...values, [event.target.name]: event.target.value });
+  const onChange = (propName, propValue) => (event) => {
+    console.log(propName, propValue);
+    setValues({
+      ...values,
+      [event.target.name || propName]: event.target.value || propValue,
+    });
+    if (propName === 'referralCode') {
+      clear_referralCode();
+    }
   };
 
   function getStepContent(step) {
@@ -167,6 +174,7 @@ const Authentication = ({
       case 2:
         return (
           <RegistrationForm
+            referralEmail={(user && user.email) || ''}
             onChange={onChange}
             firstName={values.firstName}
             lastName={values.lastName}
@@ -274,8 +282,8 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   generateOTP,
   verifyOTP,
-  resetOTPState,
   register,
   validate_referralCode,
+  clear_referralCode,
   clearErrors,
 })(Authentication);
