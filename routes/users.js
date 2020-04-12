@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const shortid = require('shortid');
 
+const email_helper = require('../helper.js');
 const User = require('../models/User');
 const OTP = require('../models/OTP');
 
@@ -83,7 +84,7 @@ router.post('/otp/generate', async (req, res) => {
     if (otp) {
       //otp found
       //update otp
-      await OTP.findByIdAndUpdate(
+      otp = await OTP.findByIdAndUpdate(
         otp.id,
         {
           $set: { otp: randomNumber },
@@ -92,10 +93,17 @@ router.post('/otp/generate', async (req, res) => {
       );
     } else {
       //create otp obj
-      let newOTP = new OTP({ email, otp: randomNumber });
+      otp = new OTP({ email, otp: randomNumber });
       //save otp
-      await newOTP.save();
+      await otp.save();
     }
+
+    email_helper(
+      email,
+      'Use the bewlow otp for authentication',
+      'OTP Authentication',
+      `<h3>Use the below otp for authentication</h3> <br/> <h4>${otp.otp}</h4>`
+    );
 
     // send response with status success
     res.json({

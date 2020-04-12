@@ -30,7 +30,6 @@ const RegistrationForm = ({
           value={firstName}
           onChange={onChange}
           autoFocus
-          required
         />
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -44,7 +43,6 @@ const RegistrationForm = ({
           value={lastName}
           onChange={onChange}
           autoComplete="lastName"
-          required
         />
       </Grid>
       <Grid item xs={12}>
