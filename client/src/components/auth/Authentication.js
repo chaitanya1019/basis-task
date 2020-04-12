@@ -17,6 +17,7 @@ import {
   generateOTP,
   verifyOTP,
   register,
+  resetOTPState,
   validate_referralCode,
 } from '../../actions/authActions';
 import { clearErrors } from '../../actions/errorActions.js';
@@ -83,6 +84,7 @@ const Authentication = ({
   error,
   generateOTP,
   verifyOTP,
+  resetOTPState,
   register,
   validate_referralCode,
   clearErrors,
@@ -154,7 +156,14 @@ const Authentication = ({
       case 0:
         return <EmailForm onChange={onChange} email={values.email} />;
       case 1:
-        return <OTPForm onChange={onChange} otp={values.otp} />;
+        return (
+          <OTPForm
+            onChange={onChange}
+            otp={values.otp}
+            email={values.email}
+            otpSent={otpSent}
+          />
+        );
       case 2:
         return (
           <RegistrationForm
@@ -188,9 +197,9 @@ const Authentication = ({
     }
   };
 
-  const handleBack = () => {
-    setActiveStep(activeStep - 1);
-  };
+  // const handleBack = () => {
+  //   setActiveStep(activeStep - 1);
+  // };
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -265,6 +274,7 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   generateOTP,
   verifyOTP,
+  resetOTPState,
   register,
   validate_referralCode,
   clearErrors,
